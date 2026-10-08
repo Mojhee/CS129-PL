@@ -138,7 +138,9 @@ class IDE(tk.Tk):
 
         self.gutter = tk.Canvas(tab, width=40, background=GUTTER_BG,
                                 highlightthickness=0, borderwidth=0)
-        self.editor = tk.Text(tab, wrap="none", undo=True, font=self.code_font,
+        # A small requested width lets the pane weights, not the default
+        # 80-character width, decide how wide the editor is.
+        self.editor = tk.Text(tab, wrap="none", undo=True, font=self.code_font, width=40,
                               borderwidth=0, padx=6, pady=4, tabs=self.code_font.measure("    "))
         y_scroll = ttk.Scrollbar(tab, orient="vertical", command=self.editor.yview)
         x_scroll = ttk.Scrollbar(tab, orient="horizontal", command=self.editor.xview)
@@ -162,6 +164,10 @@ class IDE(tk.Tk):
         frame = ttk.LabelFrame(parent, text="Table of Variables", padding=4)
         frame.rowconfigure(0, weight=1)
         frame.columnconfigure(0, weight=1)
+
+        # Size rows from the font so they do not overlap on high-DPI displays.
+        row_height = tkfont.nametofont("TkDefaultFont").metrics("linespace") + 6
+        ttk.Style(self).configure("Treeview", rowheight=row_height)
 
         self.var_table = ttk.Treeview(frame, columns=("name", "type"), show="headings",
                                       selectmode="browse")
