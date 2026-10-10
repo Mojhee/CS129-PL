@@ -5,15 +5,19 @@ from tokens import Variable, IDENT, TYPE_KEYWORDS
 def build_variable_table(lexemes):
     """Return a list of Variable(name, type) in order of definition."""
     variables = []
-    seen = set()  # names already added
+    seen = set() # Keep track of variables that have already been seen
 
     # Iterates inclusively of the whole list.
     # Pseudocode of "len(lexemes) - 1" is synonymous with "- 2" below.
-    # Is "len(lexemes) - 1" instead of "len(lexemes) - 2" since the last
+    # It is "len(lexemes) - 1" instead of "len(lexemes) - 2" because the last
     # element is checked with "following = lexemes[i + 1]" below.
     for i in range(len(lexemes) - 1):
         current = lexemes[i]
         following = lexemes[i + 1]
+
+        # If a type keyword is followed by an identifier that hasn't been declared yet,
+        # register the new variable and record it in the seen set to prevent duplicates.
+
         if current.token in TYPE_KEYWORDS and following.token == IDENT:
             if following.text not in seen:
                 variables.append(Variable(following.text, current.token))
@@ -21,7 +25,8 @@ def build_variable_table(lexemes):
 
     return variables
 
-
+# This block runs when the file is executed directly
+# Running test cases are defined and executed below
 if __name__ == "__main__":
     from tokens import Lexeme
 
