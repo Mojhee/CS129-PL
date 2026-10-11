@@ -1,3 +1,10 @@
+"""Lexer (scanner and tokenizer) for the IOL lexical analyzer (PE02, Task 2).
+
+scan() reads the source code one character at a time and splits it into
+lexemes at whitespace. classify() gives each lexeme its token using a small
+DFA: INT_LIT, IDENT, a keyword, or ERR_LEX.
+"""
+
 # Import the shared data structures and token definitions
 # from tokens.py.
 from tokens import Lexeme, KEYWORDS, INT_LIT, IDENT, ERR_LEX
@@ -215,6 +222,8 @@ def scan(source):
 
 
 
+# Quick self-test; runs only when this file is executed directly
+# (python lexer.py), not when it is imported.
 if __name__ == "__main__":
     for word in ["PRINT", "print", "IOLx", "007", "-5", "1x", "my_var"]:
         print(word, "->", classify(word))

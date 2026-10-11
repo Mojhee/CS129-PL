@@ -7,10 +7,12 @@ def build_variable_table(lexemes):
     variables = []
     seen = set() # Keep track of variables that have already been seen
 
-    # Iterates inclusively of the whole list.
-    # Pseudocode of "len(lexemes) - 1" is synonymous with "- 2" below.
-    # It is "len(lexemes) - 1" instead of "len(lexemes) - 2" because the last
-    # element is checked with "following = lexemes[i + 1]" below.
+    # Look at every pair of neighboring lexemes (current, following).
+    # i goes from 0 to len(lexemes) - 2 (the task guide's "for i from 0 to
+    # len(lexemes) - 2"); range() stops before its end value, so the end value
+    # is len(lexemes) - 1. The last lexeme has no following lexeme, so it is
+    # only checked as "following". An empty list or a single lexeme gives an
+    # empty range, so there is no crash.
     for i in range(len(lexemes) - 1):
         current = lexemes[i]
         following = lexemes[i + 1]
