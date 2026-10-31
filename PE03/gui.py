@@ -66,6 +66,8 @@ class ParserApp(tk.Tk):
         Row 3: PARSING message
         Row 4: solution table
         """
+        # The two top panels share the width equally. When the window is
+        # resized, the extra height goes to the top tables and the solution.
         self.columnconfigure(0, weight=1, uniform="top")
         self.columnconfigure(1, weight=1, uniform="top")
         self.rowconfigure(0, weight=2)
@@ -75,6 +77,7 @@ class ParserApp(tk.Tk):
         self._build_productions_panel().grid(row=0, column=0, sticky="nsew", **pad)
         self._build_table_panel().grid(row=0, column=1, sticky="nsew", **pad)
 
+        # LOADED message on the left, the single Load button on the right.
         load_row = ttk.Frame(self)
         load_row.grid(row=1, column=0, columnspan=2, sticky="ew", **pad)
         load_row.columnconfigure(0, weight=1)
@@ -82,6 +85,7 @@ class ParserApp(tk.Tk):
         self.loaded_label.grid(row=0, column=0, sticky="w")
         ttk.Button(load_row, text="Load", command=self.load_file).grid(row=0, column=1)
 
+        # INPUT label, the token field (stretches with the window), and Parse.
         input_row = ttk.Frame(self)
         input_row.grid(row=2, column=0, columnspan=2, sticky="ew", **pad)
         input_row.columnconfigure(1, weight=1)
@@ -89,9 +93,11 @@ class ParserApp(tk.Tk):
         self.input_entry = ttk.Entry(input_row)
         self.input_entry.grid(row=0, column=1, sticky="ew", padx=(0, 6))
         self.input_entry.bind("<Return>", self._on_enter)
+        # Parse starts disabled; _update_parse_button enables it later.
         self.parse_button = ttk.Button(input_row, text="Parse", command=self.parse_input)
         self.parse_button.grid(row=0, column=2)
 
+        # Result or problem message of the last parse.
         self.parsing_label = ttk.Label(self, text="PARSING:")
         self.parsing_label.grid(row=3, column=0, columnspan=2, sticky="w", **pad)
 
@@ -289,15 +295,18 @@ class ParserApp(tk.Tk):
 
     def parse_input(self):
         """Parse button: check the input and files, parse, save, and show the result."""
+        # The button is disabled without both files; this also guards the Enter key.
         if not (self.productions and self.table):
             return
         self._clear_solution()
 
+        # 1. The input must not be empty or only spaces.
         text = self.input_entry.get()
         if not text.strip():
             self._set_parsing("Enter an input first.", INVALID_FG)
             return
 
+        # 2. The .prod and .ptbl files must have the same name (rules.prod, rules.ptbl).
         prod_name = os.path.basename(self.productions.path)
         ptbl_name = os.path.basename(self.table.path)
         if not same_name(self.productions.path, self.table.path):
@@ -305,6 +314,7 @@ class ParserApp(tk.Tk):
                               INVALID_FG)
             return
 
+        # 3. The two files must agree with each other; list the first few problems.
         problems = check_compatible(self.productions, self.table)
         if problems:
             shown = problems[:MAX_PROBLEMS_SHOWN]
@@ -315,20 +325,24 @@ class ParserApp(tk.Tk):
             self._set_parsing(f"{prod_name} and {ptbl_name} do not match.", INVALID_FG)
             return
 
-        # Tokenize before asking for a name, so a typed $ is reported right away.
+        # 4. Split the input into tokens. This is done before asking for a
+        #    name, so a typed $ is reported right away.
         try:
             tokens = tokenize_input(text)
         except ValueError as error:
             self._set_parsing(str(error), INVALID_FG)
             return
 
+        # 5. Ask for the output name; cancelling stops without parsing.
         outname = self._ask_outname()
         if outname is None:
             return
 
+        # 6. Run the parser and show every step, valid or not.
         result = parse(tokens, self.productions, self.table)
         self._show_solution(result.steps)
 
+        # 7. Save the steps as outname_prodname.prsd next to the .prod file.
         path = output_path(outname, self.productions.path)
         file_name = os.path.basename(path)
         verdict = "Valid" if result.valid else "Invalid"

@@ -9,10 +9,12 @@ import os
 from models import (FileFormatError, Production, Productions, ParseTable,
                     ParseStep, ParseResult)
 
+# The handout's expression grammar: (number, non-terminal, production).
 SAMPLE_PRODUCTIONS = [
     (1, "E", "T E'"), (2, "E'", "+ T E'"), (3, "E'", "e"), (4, "T", "F T'"),
     (5, "T'", "* F T'"), (6, "T'", "e"), (7, "F", "( E )"), (8, "F", "id"),
 ]
+# Parse table columns (header order) and its non-blank cells.
 SAMPLE_TERMINALS = ["id", "+", "*", "(", ")", "$"]
 SAMPLE_CELLS = {
     ("E", "id"): 1, ("E", "("): 1,
@@ -21,6 +23,7 @@ SAMPLE_CELLS = {
     ("T'", "+"): 6, ("T'", "*"): 5, ("T'", ")"): 6, ("T'", "$"): 6,
     ("F", "id"): 8, ("F", "("): 7,
 }
+# The 18 rows of the handout's sample output for id + id * id.
 SAMPLE_STEPS = [
     ("E $", "id + id * id $", ""),
     ("T E' $", "id + id * id $", "Output E > T E'"),
@@ -109,7 +112,7 @@ def output_path(outname, prod_path):
 
 def write_prsd(result, path):
     """Write the steps as CSV; the first row has no trailing comma."""
-    import csv
+    import csv   # only this stub writes files
     with open(path, "w", newline="", encoding="utf-8") as file:
         writer = csv.writer(file)
         for step in result.steps:
