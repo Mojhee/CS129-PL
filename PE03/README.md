@@ -103,12 +103,13 @@ T E' $,id + id * id $,Output E > T E'
 | `loaders.py` | Reads and checks `.prod` and `.ptbl` files. |
 | `parser.py` | Splits the input into tokens and runs the parser. |
 | `output.py` | Builds the output file name and writes the `.prsd` file. |
-| `tests/` | Sample grammars, broken files, and expected outputs. |
+| `tests/` | Sample grammars, broken files, and expected outputs (see `tests/README.md`). |
+| `build_exe.bat` | Builds `dist/PE03_Parser.exe` with PyInstaller (Windows). |
 | `stubs.py` | **Temporary.** Fake versions of `loaders.py`, `parser.py`, and `output.py`, used by `gui.py` until the real modules are merged. Delete before submission. |
 
 ## Building the executable
 
-On the build computer only:
+On the build computer only (Windows), run `build_exe.bat`, or:
 
 ```
 pip install pyinstaller

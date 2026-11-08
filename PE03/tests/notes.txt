@@ -1,0 +1,2 @@
+This file has the wrong extension. Loading it must be refused with:
+Only .prod and .ptbl files can be loaded.

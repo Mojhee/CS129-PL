@@ -1,0 +1,18 @@
+E $,id + id * id $
+T E' $,id + id * id $,Output E > T E'
+F T' E' $,id + id * id $,Output T > F T'
+id T' E' $,id + id * id $,Output F > id
+T' E' $,+ id * id $,Match id
+E' $,+ id * id $,Output T' > e
++ T E' $,+ id * id $,Output E' > + T E'
+T E' $,id * id $,Match +
+F T' E' $,id * id $,Output T > F T'
+id T' E' $,id * id $,Output F > id
+T' E' $,* id $,Match id
+* F T' E' $,* id $,Output T' > * F T'
+F T' E' $,id $,Match *
+id T' E' $,id $,Output F > id
+T' E' $,$,Match id
+E' $,$,Output T' > e
+$,$,Output E' > e
+,,Match $
