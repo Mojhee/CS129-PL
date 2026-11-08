@@ -1,0 +1,7 @@
+1,stmts,stmt stmts
+2,stmts,e
+3,stmt,PRINT expr
+4,stmt,INTO IDENT IS expr
+5,expr,IDENT
+6,expr,INT_LIT
+7,expr,ADD expr expr

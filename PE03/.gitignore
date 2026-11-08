@@ -1,0 +1,7 @@
+__pycache__/
+build/
+dist/
+*.spec
+# Generated parse outputs; the expected ones in tests/ are kept
+*.prsd
+!tests/expected_*.prsd

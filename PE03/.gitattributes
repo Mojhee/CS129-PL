@@ -1,0 +1,2 @@
+# Keep .prsd files byte-for-byte (CRLF, like CSV); the tests compare them exactly.
+*.prsd -text
